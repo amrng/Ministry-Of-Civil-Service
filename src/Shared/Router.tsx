@@ -6,6 +6,7 @@ import About from "../pages/About";
 import NewsDetails from "../pages/NewsDetails";
 import AdminLayout from "../components/Layouts/AdminLayout";
 import Login from "../pages/Login";
+import ProtectedRoutes from "./ProtectedRoutes";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,11 @@ const router = createBrowserRouter([
   { path: "/admin/control/login", element: <Login /> },
   {
     path: "/admin/control",
-    element: <AdminLayout />,
+    element: (
+      <ProtectedRoutes>
+        <AdminLayout />
+      </ProtectedRoutes>
+    ),
     children: [
       { path: "create-news", element: <div>Create control</div> },
       { path: "all-news", element: <div>All control</div> },

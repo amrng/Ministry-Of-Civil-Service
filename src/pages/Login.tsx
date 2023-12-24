@@ -5,9 +5,18 @@ import MinstryText from "../components/Logos/MinistryText";
 import { LoginSchema } from "../components/interfaces/interface";
 import axiosInstance from "../App/api/axios.config";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const setCookie = (name: string, value: string, days: number) => {
+    const expires = new Date(
+      Date.now() + days * 24 * 60 * 60 * 1000
+    ).toUTCString();
+    return (document.cookie = `${name}=${value}; expires=${expires}; path=/`);
+  };
 
   const validationSchema = yup.object({
     email: yup.string().email("Invalid email").required("Email is required"),
@@ -25,8 +34,16 @@ export default function Login() {
   const handleFormSubmit = async (values: LoginSchema) => {
     try {
       setIsLoading(true);
-      const response = await axiosInstance.post("login", values);
-      console.log(response.headers.get);
+      await axiosInstance
+        .post("login", values, {
+          withCredentials: true,
+        })
+        .then((result) => {
+          if (result.status === 200) {
+            setCookie("admin-token", result.data.token, 7);
+            navigate("/admin/control");
+          }
+        });
 
       setIsLoading(false);
     } catch (error) {

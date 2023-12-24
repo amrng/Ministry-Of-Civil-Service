@@ -48,17 +48,17 @@ export default function Header() {
         <NavbarContent
           className="hidden sm:flex gap-6 md:gap-14 h-full"
           justify="center">
-          <NavbarItem className="text-lg text-black hover:text-amber-500 font-medium">
+          <NavbarItem className="text-lg text-black hover:text-[#CEA672] font-medium">
             <NavLink className="py-4" to={"/news"}>
               News
             </NavLink>
           </NavbarItem>
-          <NavbarItem className="text-lg text-black hover:text-amber-500 font-medium">
+          <NavbarItem className="text-lg text-black hover:text-[#CEA672] font-medium">
             <NavLink className="py-4" to={"/activities"}>
               Activities
             </NavLink>
           </NavbarItem>
-          <NavbarItem className="text-lg text-black hover:text-amber-500 font-medium">
+          <NavbarItem className="text-lg text-black hover:text-[#CEA672] font-medium">
             <NavLink className="py-4" to={"/about"}>
               About
             </NavLink>

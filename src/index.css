@@ -44,6 +44,6 @@ a {
 
 a.active {
   transition: all 0.3s;
-  border-bottom: 4px solid rgb(245, 158, 11);
-  color: rgb(245, 158, 11) !important;
+  border-bottom: 4px solid #CEA672;
+  color: #CEA672 !important;
 }

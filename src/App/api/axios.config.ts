@@ -1,7 +1,9 @@
 import axios from "axios";
 
+export const baseURL = "http://localhost:3000/";
+
 const axiosInstance = axios.create({
-  baseURL: "https://nestnews.onrender.com/",
+  baseURL,
   headers: {
     Accept: "application/json" || "multipart/form-data",
     "Content-Type": "application/json" || "multipart/form-data",

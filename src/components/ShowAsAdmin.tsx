@@ -6,6 +6,7 @@ import { CardActionArea } from "@mui/material";
 import useShowNews from "../Shared/Hooks/useShowNews";
 import { ShowNews } from "../Shared/interfaces/interface";
 import Paginator from "./Features/Paginator";
+import { baseURL } from "../App/api/axios.config";
 
 export default function ShowAsAdmin() {
   const { data, isLoading } = useShowNews({
@@ -31,7 +32,7 @@ export default function ShowAsAdmin() {
             <CardMedia
               sx={{ height: 170, objectFit: "fill" }}
               component="img"
-              image={e.img_url[0]}
+              image={`${baseURL}post/media/${e.img_url[0]}`}
               alt="Ministry of civil services"
             />
             <CardContent>
@@ -43,7 +44,7 @@ export default function ShowAsAdmin() {
                 {e.title}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                {e._id}
+                {e.description}
               </Typography>
             </CardContent>
           </CardActionArea>

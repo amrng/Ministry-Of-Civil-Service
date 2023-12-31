@@ -14,4 +14,5 @@ export interface ShowNews {
   video_url: string[];
   title: string;
   img_url: string[];
+  description: string;
 }

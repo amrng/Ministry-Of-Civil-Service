@@ -55,7 +55,7 @@ export default function CreateNews() {
     }
     setIsLoading(true);
     await axiosInstance
-      .post("https://nestnews.onrender.com/post", formData, { headers })
+      .post("post", formData, { headers })
       .then((result) => {
         if (result.status === 200) {
           setIsLoading(false);

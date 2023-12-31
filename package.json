@@ -14,13 +14,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@nextui-org/react": "^2.2.9",
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.15.2",
+    "@mui/material": "^5.15.2",
     "@tanstack/react-query": "^5.14.2",
-    "antd": "^5.12.4",
     "aos": "^2.3.4",
     "axios": "^1.6.2",
     "formik": "^2.4.5",
-    "framer-motion": "^10.16.16",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",

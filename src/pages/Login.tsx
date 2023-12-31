@@ -1,28 +1,24 @@
 import { useFormik } from "formik";
-import MinstryLogo from "../components/Logos/MinistryLogo";
+import MinstryLogo from "../Shared/Logos/MinistryLogo";
 import * as yup from "yup";
-import MinstryText from "../components/Logos/MinistryText";
-import { LoginSchema } from "../components/interfaces/interface";
+import MinstryText from "../Shared/Logos/MinistryText";
+import { LoginSchema } from "../Shared/interfaces/interface";
 import axiosInstance from "../App/api/axios.config";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { setCookie } from "../Shared/Functions/cookies";
+import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
-  const setCookie = (name: string, value: string, days: number) => {
-    const expires = new Date(
-      Date.now() + days * 24 * 60 * 60 * 1000
-    ).toUTCString();
-    return (document.cookie = `${name}=${value}; expires=${expires}; path=/`);
-  };
+  const [responseError, setResponseError] = useState("");
 
   const validationSchema = yup.object({
     email: yup.string().email("Invalid email").required("Email is required"),
     password: yup
       .string()
-      .min(5, "Minimum 5 characters")
+      .min(8, "Minimum 8 characters")
       .required("Password is required"),
   });
 
@@ -32,24 +28,24 @@ export default function Login() {
   };
 
   const handleFormSubmit = async (values: LoginSchema) => {
-    try {
-      setIsLoading(true);
-      await axiosInstance
-        .post("login", values, {
-          withCredentials: true,
-        })
-        .then((result) => {
-          if (result.status === 200) {
-            setCookie("admin-token", result.data.token, 7);
-            navigate("/admin/control");
-          }
-        });
+    setIsLoading(true);
+    await axiosInstance
+      .post("login", values, {
+        withCredentials: true,
+      })
+      .then((result) => {
+        if (result.status === 200) {
+          setCookie("admin-token", result.data.token, 7);
+          navigate("/admin/control");
+        }
+      })
+      .catch((error) => {
+        setResponseError(error.response?.data?.message);
+        console.log(error);
+        setIsLoading(false);
+      });
 
-      setIsLoading(false);
-    } catch (error) {
-      console.log(error);
-      setIsLoading(false);
-    }
+    setIsLoading(false);
   };
 
   const formik = useFormik<LoginSchema>({
@@ -62,8 +58,18 @@ export default function Login() {
   });
 
   return (
-    <div className="flex justify-center items-center h-screen">
-      <div className="flex flex-col items-center justify-center w-[400px] px-4 py-8 rounded-lg shadow-lg shadow-[#CEA672]">
+    <div className="flex flex-col justify-center items-center h-screen">
+      {responseError !== "" ? (
+        <div
+          className="mb-8 bg-red-300 text-red-600 border-l-8 rounded-lg font-semibold
+         border-red-600 py-3 px-12 text-center">
+          <p>{responseError}</p>
+        </div>
+      ) : (
+        ""
+      )}
+
+      <div className="flex flex-col items-center justify-center w-64 sm:w-[400px] px-4 py-8 rounded-lg shadow-lg shadow-[#CEA672]">
         <div className="flex flex-col items-center">
           <MinstryLogo width="100px" />
           <MinstryText width="150px" />
@@ -75,16 +81,17 @@ export default function Login() {
 
         <form
           onSubmit={formik.handleSubmit}
-          className="flex flex-col items-center justify-center">
-          <div>
+          className="flex flex-col items-center w-full">
+          <div className="w-full px-5">
             <input
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              value={formik.values.email}
               type="email"
               name="email"
               placeholder="Email"
               autoComplete="off"
-              className="rounded-lg focus:outline-none bg-[#CEA672] text-white pl-4 h-10 placeholder:text-white
+              className="rounded-lg focus:outline-none w-full bg-[#CEA672] text-white pl-4 h-10 placeholder:text-white
             focus:placeholder:opacity-0"
             />
 
@@ -95,14 +102,15 @@ export default function Login() {
             ) : null}
           </div>
 
-          <div className="my-4">
+          <div className="my-4 w-full px-5">
             <input
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
+              value={formik.values.password}
               type="password"
               name="password"
               placeholder="Password"
-              className="rounded-lg focus:outline-none bg-[#CEA672] text-white pl-4 h-10 placeholder:text-white
+              className="rounded-lg focus:outline-none w-full bg-[#CEA672] text-white pl-4 h-10 placeholder:text-white
             focus:placeholder:opacity-0"
             />
             {formik.errors.password && formik.touched.password ? (
@@ -113,7 +121,7 @@ export default function Login() {
           </div>
 
           <button
-            className="bg-[#CEA672] disabled:opacity-55 disabled:cursor-not-allowed rounded-lg px-10 py-2 text-white font-semibold"
+            className="bg-[#CEA672] disabled:opacity-55 disabled:cursor-not-allowed rounded-lg px-14 py-2 text-white font-semibold"
             type="submit"
             disabled={
               formik.errors.email ||
@@ -123,7 +131,11 @@ export default function Login() {
                 ? true
                 : false
             }>
-            {isLoading ? "loadin..." : "Login"}
+            {isLoading ? (
+              <CircularProgress color="inherit" size={20} thickness={5} />
+            ) : (
+              "Login"
+            )}
           </button>
         </form>
       </div>

@@ -1,10 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
-import Layout from "../components/Layouts/Layout";
+import Layout from "./Layouts/Layout";
 import News from "../pages/News";
 import PublicActivity from "../pages/PublicActivity";
 import About from "../pages/About";
 import NewsDetails from "../pages/NewsDetails";
-import AdminLayout from "../components/Layouts/AdminLayout";
+import AdminLayout from "./Layouts/AdminLayout";
 import Login from "../pages/Login";
 import ProtectedRoutes from "./ProtectedRoutes";
 
@@ -19,6 +19,7 @@ const router = createBrowserRouter([
       { path: "about", element: <About /> },
     ],
   },
+
   { path: "/admin/control/login", element: <Login /> },
   {
     path: "/admin/control",
@@ -27,11 +28,7 @@ const router = createBrowserRouter([
         <AdminLayout />
       </ProtectedRoutes>
     ),
-    children: [
-      { path: "create-news", element: <div>Create control</div> },
-      { path: "all-news", element: <div>All control</div> },
-      { path: "kofta-news", element: <div>Kofta control</div> },
-    ],
+    children: [{ path: "all-news", element: <News /> }],
   },
 ]);
 

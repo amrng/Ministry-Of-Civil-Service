@@ -9,7 +9,7 @@ export interface CreateNewNews {
   media?: FileList | null;
 }
 
-export interface ShowNews {
+export interface ShowNewsList {
   _id: string;
   video_url: string[];
   title: string;

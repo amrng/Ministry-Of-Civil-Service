@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { getCookie } from "./Functions/cookies";
+import { getCookie } from "../App/cookies";
 
 interface Iprops {
   children: ReactNode;

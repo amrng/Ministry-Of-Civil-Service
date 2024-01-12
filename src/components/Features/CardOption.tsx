@@ -3,9 +3,9 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
 import DeleteOutlineTwoToneIcon from "@mui/icons-material/DeleteOutlineTwoTone";
-import axiosInstance from "../../App/api/axios.config";
-import { getCookie } from "../../Shared/Functions/cookies";
 import { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { deletePost } from "../../App/api/NewsCrud";
 
 interface Iprops {
   id: string;
@@ -13,21 +13,25 @@ interface Iprops {
 
 const CardOption = ({ id }: Iprops) => {
   const [isDeleteing, setIsDeleting] = useState(false);
+  const queryClient = useQueryClient();
 
-  const headers = {
-    authorization: `CIVILSERVICEMINISTRY ${getCookie("admin-token")}`,
-  };
-  const onDelete = async (id: string) => {
-    setIsDeleting(true);
-    await axiosInstance
-      .delete(`post/${id}`, { headers })
-      .then((result) => {
-        if (result.status === 200) {
-          console.log(result);
-          setIsDeleting(false);
-        }
-      })
-      .catch((err) => console.log(err));
+  const handleDeletePost = useMutation({
+    mutationFn: deletePost,
+    onMutate: () => {
+      setIsDeleting(true);
+    },
+    onSuccess: () => {
+      setIsDeleting(false);
+      queryClient.invalidateQueries({ queryKey: ["News"] });
+    },
+    onError: (err) => {
+      setIsDeleting(false);
+      console.log(err);
+    },
+  });
+
+  const onDelete = (id: string) => {
+    handleDeletePost.mutate(id);
   };
 
   return (

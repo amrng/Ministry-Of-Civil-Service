@@ -1,6 +1,5 @@
 import { useFormik } from "formik";
 import { CreateNewNews } from "../../Shared/interfaces/interface";
-import { getCookie } from "../../Shared/Functions/cookies";
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -9,8 +8,11 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { CircularProgress } from "@mui/material";
-import axiosInstance from "../../App/api/axios.config";
+import { alpha } from "@mui/material";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createPost } from "../../App/api/NewsCrud";
+import { AppButton, VisuallyHiddenInput } from "../../Shared/Styles/AppStyles";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -24,6 +26,7 @@ const Transition = React.forwardRef(function Transition(
 export default function CreateNews() {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -39,12 +42,19 @@ export default function CreateNews() {
     media: null,
   };
 
-  const headers = {
-    "Content-Type": "multipart/form-data",
-    authorization: `CIVILSERVICEMINISTRY ${getCookie("admin-token")}`,
-  };
+  const handleSubmitPost = useMutation({
+    mutationFn: createPost,
+    onSuccess: () => {
+      formik.resetForm();
+      handleClose();
+      queryClient.invalidateQueries({ queryKey: ["News"] });
+    },
+    onError: (err) => {
+      console.log(err);
+    },
+  });
 
-  const onSubmit = async (values: CreateNewNews) => {
+  const onSubmit = (values: CreateNewNews) => {
     const formData = new FormData();
     formData.append("title", values.title);
     formData.append("description", values.description);
@@ -53,19 +63,7 @@ export default function CreateNews() {
         formData.append("media", values.media[i]);
       }
     }
-    setIsLoading(true);
-    await axiosInstance
-      .post("post", formData, { headers })
-      .then((result) => {
-        if (result.status === 200) {
-          setIsLoading(false);
-          handleClose();
-        }
-      })
-      .catch((err) => {
-        setIsLoading(false);
-        console.log(err);
-      });
+    handleSubmitPost.mutate(formData);
   };
 
   const formik = useFormik<CreateNewNews>({
@@ -73,24 +71,49 @@ export default function CreateNews() {
     onSubmit,
   });
 
+  // if (handleSubmitPost.isPending) {
+  //   setIsLoading(true);
+  // }
+  // if (handleSubmitPost.error) {
+  //   setIsLoading(false);
+  //   console.log(handleSubmitPost.error);
+  // }
+
   return (
     <>
-      <Button variant="outlined" onClick={handleClickOpen}>
+      <Button
+        sx={{
+          borderRadius: "16px",
+          color: "#013756",
+          border: "1px solid #013756",
+          padding: "8px 14px",
+          backgroundColor: alpha("#CEA672", 0.1),
+          "&:hover": {
+            backgroundColor: alpha("#CEA672", 0.15),
+            border: "1px solid #013756",
+          },
+        }}
+        variant="outlined"
+        onClick={handleClickOpen}>
         Create News +
       </Button>
       <Dialog
+        fullScreen
         open={open}
         TransitionComponent={Transition}
         keepMounted
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description">
-        <DialogTitle>Create News</DialogTitle>
+        <DialogTitle
+          sx={{ color: "#013756", textAlign: "center", fontSize: "2rem" }}>
+          Create News
+        </DialogTitle>
         <DialogContent>
           <form
             onSubmit={formik.handleSubmit}
             className=" flex flex-col items-center w-full space-y-5">
             <input
-              className="rounded-lg focus:outline-none w-full border p-4 h-10
+              className="rounded-lg focus:outline-none w-1/3 border border-[#CEA672] p-4 h-10
             focus:placeholder:opacity-0"
               type="text"
               name="title"
@@ -103,9 +126,9 @@ export default function CreateNews() {
             />
 
             <textarea
-              className="rounded-lg focus:outline-none w-full border p-4
+              className="rounded-lg focus:outline-none border border-[#CEA672] w-full p-4
             focus:placeholder:opacity-0"
-              rows={5}
+              rows={18}
               placeholder="Enter news description"
               autoComplete="off"
               name="description"
@@ -113,31 +136,44 @@ export default function CreateNews() {
               onBlur={formik.handleBlur}
               value={formik.values.description}
             />
-            <input
-              type="file"
-              name="media"
-              multiple
-              onChange={(event) => {
-                formik.setFieldValue("media", event.currentTarget.files);
+
+            <Button
+              component="label"
+              sx={{
+                color: "#013756",
+                backgroundColor: "#F4EEE3",
+                ":hover": {
+                  boxShadow: "0px 0px 10px 2px #013756",
+                },
+                borderRadius: "16px",
+                padding: "6px 15px",
+                fontSize: 16,
               }}
-              onBlur={formik.handleBlur}
-            />
-            <DialogActions>
-              <button
-                className="bg-[#CEA672] hover:bg-[#ffad42] duration-300 hover:text-black disabled:opacity-55 disabled:cursor-not-allowed rounded-lg px-14 py-2 text-white font-semibold"
-                type="button"
-                onClick={handleClose}>
+              startIcon={<CloudUploadIcon />}>
+              Upload Images and Videos
+              <VisuallyHiddenInput
+                type="file"
+                name="media"
+                multiple
+                onChange={(event) => {
+                  formik.setFieldValue("media", event.currentTarget.files);
+                }}
+                onBlur={formik.handleBlur}
+              />
+            </Button>
+
+            <DialogActions
+              sx={{
+                display: "flex",
+                justifyContent: "space-evenly",
+                width: "100%",
+              }}>
+              <AppButton type="submit">
+                {isLoading ? "Loading" : "Submit"}
+              </AppButton>
+              <AppButton type="button" onClick={handleClose}>
                 Close
-              </button>
-              <button
-                className="bg-[#CEA672] hover:bg-[#ffad42] duration-300 hover:text-black disabled:opacity-55 disabled:cursor-not-allowed rounded-lg px-14 py-2 text-white font-semibold"
-                type="submit">
-                {isLoading ? (
-                  <CircularProgress color="inherit" size={20} thickness={5} />
-                ) : (
-                  "Submit"
-                )}
-              </button>
+              </AppButton>
             </DialogActions>
           </form>
         </DialogContent>

@@ -48,7 +48,7 @@ const StyledMenu = styled((props: MenuProps) => (
   },
 }));
 
-export default function SortBy() {
+export default function Lang() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -58,44 +58,43 @@ export default function SortBy() {
     setAnchorEl(null);
   };
   return (
-    <div>
+    <>
       <Button
         sx={{
-          borderRadius: "16px",
-          color: "#013756",
-          border: "1px solid #013756",
-          padding: "8px 14px",
-          backgroundColor: alpha("#CEA672", 0.1),
-          "&:hover": {
-            backgroundColor: alpha("#CEA672", 0.15),
-            border: "1px solid #013756",
-          },
+          color: "#CEA672",
+          fontSize: 15,
         }}
-        id="sortByButton"
-        aria-controls={open ? "sortBy" : undefined}
+        id="langButton"
+        aria-controls={open ? "lang" : undefined}
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
-        variant="outlined"
+        variant="text"
         disableElevation
         onClick={handleClick}
-        endIcon={<KeyboardArrowDownIcon />}>
-        Sort By
+        endIcon={<KeyboardArrowDownIcon fontSize="small" />}>
+        Lang
       </Button>
       <StyledMenu
-        id="sortBy"
+        id="lang"
         MenuListProps={{
-          "aria-labelledby": "sortByButton",
+          "aria-labelledby": "langButton",
         }}
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}>
         <MenuItem onClick={handleClose} disableRipple>
-          Oldest
+          English
         </MenuItem>
         <MenuItem onClick={handleClose} disableRipple>
-          Newest
+          Arabic
+        </MenuItem>
+        <MenuItem onClick={handleClose} disableRipple>
+          French
+        </MenuItem>
+        <MenuItem onClick={handleClose} disableRipple>
+          Russian
         </MenuItem>
       </StyledMenu>
-    </div>
+    </>
   );
 }

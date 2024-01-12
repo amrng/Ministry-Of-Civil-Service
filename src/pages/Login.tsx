@@ -1,12 +1,12 @@
 import { useFormik } from "formik";
-import MinstryLogo from "../Shared/Logos/MinistryLogo";
+import MinstryLogo from "../assets/Logos/MinistryLogo";
 import * as yup from "yup";
-import MinstryText from "../Shared/Logos/MinistryText";
+import MinstryText from "../assets/Logos/MinistryText";
 import { LoginSchema } from "../Shared/interfaces/interface";
 import axiosInstance from "../App/api/axios.config";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { setCookie } from "../Shared/Functions/cookies";
+import { setCookie } from "../App/cookies";
 import CircularProgress from "@mui/material/CircularProgress";
 
 export default function Login() {

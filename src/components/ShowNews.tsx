@@ -3,24 +3,24 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import { Box, Chip, Stack } from "@mui/material";
-import useShowNews from "../Shared/Hooks/useShowNews";
 import { ShowNewsList } from "../Shared/interfaces/interface";
 import Paginator from "./Features/Paginator";
 import { baseURL } from "../App/api/axios.config";
 import Divider from "@mui/material/Divider";
 import { ShareSocial } from "./Features/ShareSocial";
 import CardOption from "./Features/CardOption";
+import { useQuery } from "@tanstack/react-query";
+import { showNews } from "../App/api/NewsCrud";
 
 interface Iprops {
   isAdmin: boolean;
 }
 
 export default function ShowNews({ isAdmin }: Iprops) {
-  const { data, isLoading } = useShowNews({
-    queryKey: ["ShowNews"],
-    url: "post/all?lang=en&page=1&limit=5",
+  const { data, isLoading } = useQuery({
+    queryKey: ["News"],
+    queryFn: showNews,
   });
-  console.log(data);
 
   if (isLoading) {
     return <h1>Loading ....</h1>;

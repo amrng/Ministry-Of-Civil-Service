@@ -26,7 +26,6 @@ const Transition = React.forwardRef(function Transition(
 
 export default function CreateNews() {
   const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [url, setUrl] = useState<any[]>([]);
   const queryClient = useQueryClient();
 
@@ -46,11 +45,11 @@ export default function CreateNews() {
 
   const handleSubmitPost = useMutation({
     mutationFn: createPost,
-    onSettled: () => {
-      // formik.resetForm();
-      // handleClose();
+    onSuccess: () => {
+      formik.resetForm();
+      handleClose();
       queryClient.invalidateQueries({ queryKey: ["News"] });
-      // setUrl((prev) => prev.filter((file) => !file));
+      setUrl((prev) => prev.filter((file) => !file));
     },
     onError: (err) => {
       console.log(err);

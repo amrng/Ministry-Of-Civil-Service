@@ -1,5 +1,5 @@
 import { useFormik } from "formik";
-import { CreateNewNews } from "../../Shared/interfaces/interface";
+import { CreateNewNews, PostData } from "../../Shared/interfaces/interface";
 import React, { useState } from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -34,38 +34,41 @@ const Transition = React.forwardRef(function Transition(
 
 interface Iprops {
   idValue: string;
-  titleValue: string;
-  descriptionValue: string;
   imgsValue: string[];
   videoValue: string[];
 }
 
-export const EditNews = ({
-  idValue,
-  titleValue,
-  descriptionValue,
-  imgsValue,
-  videoValue,
-}: Iprops) => {
+export const EditNews = ({ idValue, imgsValue, videoValue }: Iprops) => {
   const [open, setOpen] = useState(false);
   const [isLoading] = useState(false);
   const [url, setUrl] = useState<any[]>([]);
   const [deleteActive, setDeleteActive] = useState("");
+  //   const [titleValue, setTitleValue] = useState<string>();
+  //   const [descriptionValue, setdescriptionValue] = useState<string>();
   const queryClient = useQueryClient();
 
-  console.log(queryClient.getQueryData(["News"]));
+  const initialValues = {
+    title: "",
+    description: "",
+    media: null,
+  };
+
   const handleClickOpen = () => {
-    setOpen(true);
+    const postData: PostData | undefined = queryClient.getQueryData(["News"]);
+    queryClient.invalidateQueries({ queryKey: ["News"] });
+    if (postData?.posts) {
+      return postData.posts.map((post) => {
+        if (post._id === idValue) {
+          initialValues.title = post.title;
+          initialValues.description = post.description;
+          setOpen(true);
+        }
+      });
+    }
   };
 
   const handleClose = () => {
     setOpen(false);
-  };
-
-  const initialValues = {
-    title: titleValue,
-    description: descriptionValue,
-    media: null,
   };
 
   const formData = new FormData();
@@ -226,7 +229,7 @@ export const EditNews = ({
                   transition: "0.3s all",
                 }}>
                 {" "}
-                {imgsValue.map((img, i) => {
+                {imgsValue?.map((img, i) => {
                   return (
                     <ViewImages key={i}>
                       <img
@@ -254,7 +257,7 @@ export const EditNews = ({
                     </ViewImages>
                   );
                 })}
-                {videoValue.map((img, i) => {
+                {videoValue?.map((img, i) => {
                   return (
                     <ViewImages key={i}>
                       <video

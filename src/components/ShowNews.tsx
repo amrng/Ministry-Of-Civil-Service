@@ -34,8 +34,8 @@ export default function ShowNews({ isAdmin }: Iprops) {
   return (
     <Box flexGrow={1}>
       <Grid container spacing={8} justifyContent={"center"}>
-        {data?.posts.map((e: ShowNewsList) => (
-          <Grid item xs={12} md={12} lg={6} key={e._id}>
+        {data?.posts.map((post: ShowNewsList) => (
+          <Grid item xs={12} md={12} lg={6} key={post._id}>
             <Card
               elevation={8}
               sx={{
@@ -46,7 +46,7 @@ export default function ShowNews({ isAdmin }: Iprops) {
               <CardMedia
                 sx={{ height: 222, objectFit: "fill" }}
                 component="img"
-                image={`${baseURL}post/media/${e.img_url[0]}`}
+                image={`${baseURL}post/media/${post.img_url[0]}`}
                 alt="Ministry of civil services"
               />
               <Divider />
@@ -56,13 +56,13 @@ export default function ShowNews({ isAdmin }: Iprops) {
                   variant="h6"
                   fontWeight={700}
                   component="h1">
-                  {e.title}
+                  {post.title}
                 </Typography>
                 <Typography
                   variant="body1"
                   component={"h2"}
                   color="text.secondary">
-                  {e.description}
+                  {post.description}
                 </Typography>
               </CardContent>
               {isAdmin ? (
@@ -79,11 +79,9 @@ export default function ShowNews({ isAdmin }: Iprops) {
 
                   <Divider />
                   <CardOption
-                    id={e._id}
-                    title={e.title}
-                    description={e.description}
-                    imgs={e.img_url}
-                    video={e.video_url}
+                    id={post._id}
+                    imgsValue={post.img_url}
+                    videoValue={post.video_url}
                   />
                 </>
               ) : null}

@@ -9,13 +9,11 @@ import { EditNews } from "./EditNews";
 
 interface Iprops {
   id: string;
-  title: string;
-  description: string;
-  imgs: string[];
-  video: string[];
+  imgsValue: string[];
+  videoValue: string[];
 }
 
-const CardOption = ({ id, title, description, imgs, video }: Iprops) => {
+const CardOption = ({ id, imgsValue, videoValue }: Iprops) => {
   const [isDeleteing, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
 
@@ -41,13 +39,7 @@ const CardOption = ({ id, title, description, imgs, video }: Iprops) => {
   return (
     <Box padding={1}>
       <Stack direction="row" justifyContent={"space-evenly"} gap={2}>
-        <EditNews
-          idValue={id}
-          titleValue={title}
-          descriptionValue={description}
-          imgsValue={imgs}
-          videoValue={video}
-        />
+        <EditNews idValue={id} imgsValue={imgsValue} videoValue={videoValue} />
         <Button
           onClick={() => onDelete(id)}
           variant="text"

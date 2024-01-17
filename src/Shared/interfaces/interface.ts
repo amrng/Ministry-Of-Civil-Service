@@ -16,3 +16,20 @@ export interface ShowNewsList {
   img_url: string[];
   description: string;
 }
+
+export interface PostData {
+  posts: [
+    {
+      addedBy?: string;
+      createdAt?: string;
+      description: string;
+      img_url?: string[];
+      title: string;
+      updatedAt?: string;
+      video_url?: string[];
+      _id: string;
+    }
+  ];
+  totalPages: number;
+  totalPosts: number;
+}

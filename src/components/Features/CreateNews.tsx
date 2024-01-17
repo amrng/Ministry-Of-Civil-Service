@@ -8,11 +8,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { alpha } from "@mui/material";
+import { Box, alpha } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPost } from "../../App/api/NewsCrud";
 import { AppButton, VisuallyHiddenInput } from "../../Shared/Styles/AppStyles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import CloseIcon from "@mui/icons-material/Close";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -20,12 +21,13 @@ const Transition = React.forwardRef(function Transition(
   },
   ref: React.Ref<unknown>
 ) {
-  return <Slide direction="up" ref={ref} {...props} />;
+  return <Slide direction="down" ref={ref} {...props} />;
 });
 
 export default function CreateNews() {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [url, setUrl] = useState<any[]>([]);
   const queryClient = useQueryClient();
 
   const handleClickOpen = () => {
@@ -44,10 +46,11 @@ export default function CreateNews() {
 
   const handleSubmitPost = useMutation({
     mutationFn: createPost,
-    onSuccess: () => {
-      formik.resetForm();
-      handleClose();
+    onSettled: () => {
+      // formik.resetForm();
+      // handleClose();
       queryClient.invalidateQueries({ queryKey: ["News"] });
+      // setUrl((prev) => prev.filter((file) => !file));
     },
     onError: (err) => {
       console.log(err);
@@ -58,9 +61,9 @@ export default function CreateNews() {
     const formData = new FormData();
     formData.append("title", values.title);
     formData.append("description", values.description);
-    if (values.media) {
-      for (let i = 0; i < values.media.length; i++) {
-        formData.append("media", values.media[i]);
+    if (url.length >= 1) {
+      for (let file of url) {
+        formData.append("media", file);
       }
     }
     handleSubmitPost.mutate(formData);
@@ -71,13 +74,17 @@ export default function CreateNews() {
     onSubmit,
   });
 
-  // if (handleSubmitPost.isPending) {
-  //   setIsLoading(true);
-  // }
-  // if (handleSubmitPost.error) {
-  //   setIsLoading(false);
-  //   console.log(handleSubmitPost.error);
-  // }
+  if (handleSubmitPost.error) {
+    console.log(handleSubmitPost.error);
+  }
+
+  const handleRemoveUrlImage = (name: string) => {
+    setUrl((prev) => {
+      return prev.filter((file) => file.name !== name);
+    });
+  };
+
+  const videoTest = (word: string) => new RegExp(/^video/).test(word);
 
   return (
     <>
@@ -112,6 +119,7 @@ export default function CreateNews() {
           <form
             onSubmit={formik.handleSubmit}
             className=" flex flex-col items-center w-full space-y-5">
+            {/* News Title */}
             <input
               className="rounded-lg focus:outline-none w-1/3 border border-[#CEA672] p-4 h-10
             focus:placeholder:opacity-0"
@@ -125,10 +133,11 @@ export default function CreateNews() {
               autoCapitalize="true"
             />
 
+            {/* News Description */}
             <textarea
               className="rounded-lg focus:outline-none border border-[#CEA672] w-full p-4
             focus:placeholder:opacity-0"
-              rows={18}
+              rows={12}
               placeholder="Enter news description"
               autoComplete="off"
               name="description"
@@ -137,6 +146,7 @@ export default function CreateNews() {
               value={formik.values.description}
             />
 
+            {/* Upload an image */}
             <Button
               component="label"
               sx={{
@@ -156,11 +166,88 @@ export default function CreateNews() {
                 name="media"
                 multiple
                 onChange={(event) => {
-                  formik.setFieldValue("media", event.currentTarget.files);
+                  if (event?.target?.files) {
+                    for (let file of event?.target.files) {
+                      setUrl((prev) => {
+                        return [...prev, file];
+                      });
+                    }
+                  }
                 }}
                 onBlur={formik.handleBlur}
               />
             </Button>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "end",
+                flexWrap: "wrap",
+                gap: 2,
+                transition: "0.3s all",
+              }}>
+              {url?.map((img, i) => {
+                const imgs = URL.createObjectURL(img);
+                return (
+                  <Box
+                    key={i}
+                    sx={{
+                      border: "1px solid #013756",
+                      width: "130px",
+                      borderRadius: "14px",
+                      ":hover": { opacity: 0.6, transition: "0.3s all" },
+                      position: "relative",
+                      transition: "0.3s all",
+                    }}>
+                    {videoTest(img.type) ? null : (
+                      <img
+                        style={{
+                          borderRadius: "14px",
+                          objectFit: "fill",
+
+                          height: "130px",
+                        }}
+                        src={imgs}
+                        alt="Sora"
+                        width={"100%"}
+                      />
+                    )}
+
+                    {videoTest(img.type) ? (
+                      <video
+                        src={imgs}
+                        style={{
+                          borderRadius: "14px",
+                          objectFit: "cover",
+                          height: "130px",
+                        }}
+                        width={"100%"}
+                      />
+                    ) : null}
+
+                    <Button
+                      onClick={() => {
+                        handleRemoveUrlImage(img.name);
+                      }}
+                      startIcon={<CloseIcon />}
+                      size="large"
+                      color="error"
+                      sx={{
+                        position: "absolute",
+                        top: "0",
+                        right: "0",
+                        width: "100%",
+                        height: "100%",
+                        opacity: 0,
+                        ":hover": { opacity: 1, transition: "0.3s all" },
+                        transition: "0.3s all",
+                      }}>
+                      Delete
+                    </Button>
+                  </Box>
+                );
+              })}
+            </Box>
 
             <DialogActions
               sx={{
@@ -169,7 +256,10 @@ export default function CreateNews() {
                 width: "100%",
               }}>
               <AppButton type="submit">
-                {isLoading ? "Loading" : "Submit"}
+                {handleSubmitPost.isPending ||
+                handleSubmitPost.status !== "success"
+                  ? "Loading"
+                  : "Submit"}
               </AppButton>
               <AppButton type="button" onClick={handleClose}>
                 Close

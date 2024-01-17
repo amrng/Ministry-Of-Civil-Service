@@ -29,3 +29,29 @@ export async function deletePost(id: string) {
   console.log(response);
   return response;
 }
+
+export async function editPost(postId: string, values: FormData) {
+  const response = await axiosInstance.patch(`post/${postId}`, values, {
+    headers: {
+      Accept: "multipart/form-data",
+      "Content-Type": "multipart/form-data",
+      authorization: `CIVILSERVICEMINISTRY ${getCookie("admin-token")}`,
+    },
+  });
+  console.log(response);
+  return response;
+}
+
+export async function deletePostMedia(postId: string, mediaName: string) {
+  const response = await axiosInstance.patch(
+    `post/${postId}/delete-media`,
+    { mediaName },
+    {
+      headers: {
+        authorization: `CIVILSERVICEMINISTRY ${getCookie("admin-token")}`,
+      },
+    }
+  );
+  console.log(response);
+  return response;
+}

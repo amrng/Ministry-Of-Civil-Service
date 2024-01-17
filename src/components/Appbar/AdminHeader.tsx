@@ -10,8 +10,8 @@ import {
   Logo,
   LogoutButton,
   Routes,
-} from "../Styles/AppStyles";
-import Lang from "../../components/Features/Lang";
+} from "../../Shared/Styles/AppStyles";
+import Lang from "../Features/Lang";
 
 export default function AdminHeader() {
   const theme = useTheme();

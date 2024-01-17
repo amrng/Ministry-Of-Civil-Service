@@ -6,7 +6,7 @@ export interface LoginSchema {
 export interface CreateNewNews {
   title: string;
   description: string;
-  media?: FileList | null;
+  media?: FileList | null | string[];
 }
 
 export interface ShowNewsList {

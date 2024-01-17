@@ -1,17 +1,21 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
 import DeleteOutlineTwoToneIcon from "@mui/icons-material/DeleteOutlineTwoTone";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePost } from "../../App/api/NewsCrud";
+import { EditNews } from "./EditNews";
 
 interface Iprops {
   id: string;
+  title: string;
+  description: string;
+  imgs: string[];
+  video: string[];
 }
 
-const CardOption = ({ id }: Iprops) => {
+const CardOption = ({ id, title, description, imgs, video }: Iprops) => {
   const [isDeleteing, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
 
@@ -37,14 +41,19 @@ const CardOption = ({ id }: Iprops) => {
   return (
     <Box padding={1}>
       <Stack direction="row" justifyContent={"space-evenly"} gap={2}>
-        <Button variant="text" size="small" startIcon={<EditNoteTwoToneIcon />}>
-          Edit
-        </Button>
+        <EditNews
+          idValue={id}
+          titleValue={title}
+          descriptionValue={description}
+          imgsValue={imgs}
+          videoValue={video}
+        />
         <Button
           onClick={() => onDelete(id)}
           variant="text"
           color="error"
-          size="small"
+          sx={{ borderRadius: 14 }}
+          size="medium"
           startIcon={<DeleteOutlineTwoToneIcon />}>
           {isDeleteing ? "loading" : "Delete"}
         </Button>

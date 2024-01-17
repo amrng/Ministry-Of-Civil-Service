@@ -85,3 +85,32 @@ export const VisuallyHiddenInput = styled("input")({
   whiteSpace: "nowrap",
   width: 1,
 });
+
+export const ImageBox = styled(Box)(() => ({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "end",
+  flexWrap: "wrap",
+  gap: 2,
+  transition: "0.3s all",
+}));
+
+export const ViewImages = styled(Box)(() => ({
+  border: "1px solid #013756",
+  width: "130px",
+  borderRadius: "14px",
+  ":hover": { opacity: 0.6, transition: "0.3s all" },
+  position: "relative",
+  transition: "0.3s all",
+}));
+
+export const RemoveImageButton = styled(Button)(() => ({
+  position: "absolute",
+  top: "0",
+  right: "0",
+  width: "100%",
+  height: "100%",
+  opacity: 0,
+  ":hover": { opacity: 1, transition: "0.3s all" },
+  transition: "0.3s all",
+}));

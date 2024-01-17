@@ -2,7 +2,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Box, Chip, Stack } from "@mui/material";
+import { Box, Chip } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import { ShowNewsList } from "../Shared/interfaces/interface";
 import Paginator from "./Features/Paginator";
 import { baseURL } from "../App/api/axios.config";
@@ -31,54 +32,65 @@ export default function ShowNews({ isAdmin }: Iprops) {
   }
 
   return (
-    <Box height={"100%"}>
-      <Stack
-        marginBottom={10}
-        direction={"row"}
-        gap={7}
-        flexWrap={"wrap"}
-        justifyContent={"start"}>
+    <Box flexGrow={1}>
+      <Grid container spacing={8} justifyContent={"center"}>
         {data?.posts.map((e: ShowNewsList) => (
-          <Card
-            elevation={4}
-            sx={{ maxWidth: 345, width: "300px", height: "530px" }}
-            key={e._id}>
-            <CardMedia
-              sx={{ height: 170, objectFit: "fill" }}
-              component="img"
-              image={`${baseURL}post/media/${e.img_url[0]}`}
-              alt="Ministry of civil services"
-            />
-            <Divider />
-            <CardContent sx={{ height: "171px" }}>
-              <Typography
-                gutterBottom
-                variant="h6"
-                fontWeight={700}
-                component="h1">
-                {e.title}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                {e.description}
-              </Typography>
-            </CardContent>
-            {isAdmin ? (
-              <>
-                <Divider textAlign="left">
-                  <Chip label="Share Social Media" color="info" size="small" />
-                </Divider>
+          <Grid item xs={12} md={12} lg={6} key={e._id}>
+            <Card
+              elevation={8}
+              sx={{
+                height: "560px",
+                backgroundColor: "inherit",
+                borderRadius: 8,
+              }}>
+              <CardMedia
+                sx={{ height: 222, objectFit: "fill" }}
+                component="img"
+                image={`${baseURL}post/media/${e.img_url[0]}`}
+                alt="Ministry of civil services"
+              />
+              <Divider />
+              <CardContent sx={{ height: "171px" }}>
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  fontWeight={700}
+                  component="h1">
+                  {e.title}
+                </Typography>
+                <Typography
+                  variant="body1"
+                  component={"h2"}
+                  color="text.secondary">
+                  {e.description}
+                </Typography>
+              </CardContent>
+              {isAdmin ? (
+                <>
+                  <Divider textAlign="left">
+                    <Chip
+                      label="Share Social Media"
+                      color="info"
+                      size="small"
+                    />
+                  </Divider>
 
-                <ShareSocial />
+                  <ShareSocial />
 
-                <Divider textAlign="left">
-                  <Chip label="Options" color="info" size="small" />
-                </Divider>
-                <CardOption id={e._id} />
-              </>
-            ) : null}
-          </Card>
+                  <Divider />
+                  <CardOption
+                    id={e._id}
+                    title={e.title}
+                    description={e.description}
+                    imgs={e.img_url}
+                    video={e.video_url}
+                  />
+                </>
+              ) : null}
+            </Card>
+          </Grid>
         ))}
-      </Stack>
+      </Grid>
       {data?.posts.length > 10 ? <Paginator /> : null}
     </Box>
   );

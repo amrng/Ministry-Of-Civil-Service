@@ -8,8 +8,8 @@ import {
   Language,
   Logo,
   Routes,
-} from "../Styles/AppStyles";
-import Lang from "../../components/Features/Lang";
+} from "../../Shared/Styles/AppStyles";
+import Lang from "../Features/Lang";
 
 export default function Header() {
   const theme = useTheme();

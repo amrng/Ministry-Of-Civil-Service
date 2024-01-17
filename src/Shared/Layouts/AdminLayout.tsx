@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import AdminHeader from "../Appbar/AdminHeader";
+import AdminHeader from "../../components/Appbar/AdminHeader";
 
 export default function AdminLayout() {
   return (

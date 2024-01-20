@@ -5,7 +5,9 @@ import DeleteOutlineTwoToneIcon from "@mui/icons-material/DeleteOutlineTwoTone";
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deletePost } from "../../App/api/NewsCrud";
-import { EditNews } from "./EditNews";
+// import { EditNews } from "./EditNews";
+import EditNoteTwoToneIcon from "@mui/icons-material/EditNoteTwoTone";
+import { useNavigate } from "react-router-dom";
 
 interface Iprops {
   id: string;
@@ -13,9 +15,14 @@ interface Iprops {
   videoValue: string[];
 }
 
-const CardOption = ({ id, imgsValue, videoValue }: Iprops) => {
+const CardOption = ({ id }: Iprops) => {
   const [isDeleteing, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  const handleClickEdit = (postId: string) => {
+    navigate(`/admin/control/edit-news/${postId}`);
+  };
 
   const handleDeletePost = useMutation({
     mutationFn: deletePost,
@@ -39,7 +46,15 @@ const CardOption = ({ id, imgsValue, videoValue }: Iprops) => {
   return (
     <Box padding={1}>
       <Stack direction="row" justifyContent={"space-evenly"} gap={2}>
-        <EditNews idValue={id} imgsValue={imgsValue} videoValue={videoValue} />
+        <Button
+          variant="text"
+          color="primary"
+          sx={{ borderRadius: 14 }}
+          size="medium"
+          startIcon={<EditNoteTwoToneIcon />}
+          onClick={() => handleClickEdit(id)}>
+          Edit
+        </Button>
         <Button
           onClick={() => onDelete(id)}
           variant="text"

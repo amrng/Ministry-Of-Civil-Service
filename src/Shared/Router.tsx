@@ -8,14 +8,15 @@ import AdminLayout from "./Layouts/AdminLayout";
 import Login from "../pages/Login";
 import ProtectedRoutes from "./ProtectedRoutes";
 import NotFound from "../pages/NotFound";
+import EditPost from "../pages/EditPost";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
     children: [
-      { path: "news", element: <News /> },
-      { path: "news/:title", element: <NewsDetails /> },
+      { path: "news", element: <News isAdmin={false} /> },
+      { path: "news/:title/:id", element: <NewsDetails /> },
       { path: "activities", element: <PublicActivity /> },
       { path: "about", element: <About /> },
       { path: "**", element: <NotFound /> },
@@ -31,8 +32,9 @@ const router = createBrowserRouter([
       </ProtectedRoutes>
     ),
     children: [
-      { path: "all-news", element: <News /> },
+      { path: "all-news", element: <News isAdmin={true} /> },
       { path: "all-activities", element: <PublicActivity /> },
+      { path: "edit-news/:postId", element: <EditPost /> },
       { path: "**", element: <NotFound /> },
     ],
   },

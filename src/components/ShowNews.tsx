@@ -2,7 +2,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import { Box, Chip } from "@mui/material";
+import { Box, CardActions, Chip } from "@mui/material";
 import Grid from "@mui/material/Grid";
 import { ShowNewsList } from "../Shared/interfaces/interface";
 import Paginator from "./Features/Paginator";
@@ -12,23 +12,33 @@ import { ShareSocial } from "./Features/ShareSocial";
 import CardOption from "./Features/CardOption";
 import { useQuery } from "@tanstack/react-query";
 import { showNews } from "../App/api/NewsCrud";
+import { ReadMore } from "../Shared/Styles/AppStyles";
+import { useNavigate } from "react-router-dom";
 
 interface Iprops {
   isAdmin: boolean;
 }
 
 export default function ShowNews({ isAdmin }: Iprops) {
-  const { data, isLoading } = useQuery({
+  const navigate = useNavigate();
+  const { data, isLoading, error } = useQuery({
     queryKey: ["News"],
     queryFn: showNews,
   });
 
+  const handleGoDetails = (title: string, postId: string) => {
+    navigate(`${title}/${postId}`);
+  };
+
   if (isLoading) {
-    return <h1>Loading ....</h1>;
+    return <h1>Loading ...</h1>;
   }
 
   if (data?.posts.length === 0) {
-    return <h1>No News !!!!</h1>;
+    return <h1>No News !!!</h1>;
+  }
+  if (error) {
+    console.log(error);
   }
 
   return (
@@ -42,6 +52,7 @@ export default function ShowNews({ isAdmin }: Iprops) {
                 height: "560px",
                 backgroundColor: "inherit",
                 borderRadius: 8,
+                position: "relative",
               }}>
               <CardMedia
                 sx={{ height: 222, objectFit: "fill" }}
@@ -65,6 +76,18 @@ export default function ShowNews({ isAdmin }: Iprops) {
                   {post.description}
                 </Typography>
               </CardContent>
+
+              {isAdmin ? null : (
+                <CardActions sx={{ display: "flex", justifyContent: "center" }}>
+                  <ReadMore
+                    variant="text"
+                    size="large"
+                    onClick={() => handleGoDetails(post.title, post._id)}>
+                    Read More
+                  </ReadMore>
+                </CardActions>
+              )}
+
               {isAdmin ? (
                 <>
                   <Divider textAlign="left">

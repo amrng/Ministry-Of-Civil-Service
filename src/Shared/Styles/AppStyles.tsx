@@ -114,3 +114,18 @@ export const RemoveImageButton = styled(Button)(() => ({
   ":hover": { opacity: 1, transition: "0.3s all" },
   transition: "0.3s all",
 }));
+export const ReadMore = styled(Button)(() => ({
+  position: "absolute",
+  bottom: 20,
+  color: "grey",
+  borderRadius: 0,
+  borderBottom: "2px solid grey",
+  borderTop: "2px solid grey",
+  transition: "0.3s all",
+  ":hover": {
+    backgroundColor: "#013755",
+    color: "#CEA672",
+    borderBottom: "2px solid #F8F6F0",
+    borderTop: "2px solid #F8F6F0",
+  },
+}));

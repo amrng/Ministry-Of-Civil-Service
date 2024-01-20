@@ -255,10 +255,7 @@ export default function CreateNews() {
                 width: "100%",
               }}>
               <AppButton type="submit">
-                {handleSubmitPost.isPending ||
-                handleSubmitPost.status !== "success"
-                  ? "Loading"
-                  : "Submit"}
+                {handleSubmitPost.isPending ? "Loading" : "Submit"}
               </AppButton>
               <AppButton type="button" onClick={handleClose}>
                 Close

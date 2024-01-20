@@ -3,12 +3,16 @@ import CreateNews from "./CreateNews";
 import Searcher from "./Search";
 import SortBy from "./SortBy";
 
-export default function NewsOptions() {
+interface Iprops {
+  isAdmin: boolean;
+}
+
+export default function NewsOptions({ isAdmin }: Iprops) {
   return (
     <Options>
       <Searcher />
       <SortBy />
-      <CreateNews />
+      {isAdmin ? <CreateNews /> : null}
     </Options>
   );
 }

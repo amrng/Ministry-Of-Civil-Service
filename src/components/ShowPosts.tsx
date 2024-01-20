@@ -17,17 +17,18 @@ import { useNavigate } from "react-router-dom";
 
 interface Iprops {
   isAdmin: boolean;
+  category: string;
 }
 
-export default function ShowNews({ isAdmin }: Iprops) {
+export default function ShowPosts({ isAdmin, category }: Iprops) {
   const navigate = useNavigate();
   const { data, isLoading, error } = useQuery({
     queryKey: ["News"],
-    queryFn: showNews,
+    queryFn: () => showNews(category),
   });
 
-  const handleGoDetails = (title: string, postId: string) => {
-    navigate(`${title}/${postId}`);
+  const handleGoDetails = (category: string, title: string, postId: string) => {
+    navigate(`${category}/${title}/${postId}`);
   };
 
   if (isLoading) {
@@ -82,7 +83,9 @@ export default function ShowNews({ isAdmin }: Iprops) {
                   <ReadMore
                     variant="text"
                     size="large"
-                    onClick={() => handleGoDetails(post.title, post._id)}>
+                    onClick={() =>
+                      handleGoDetails(category, post.title, post._id)
+                    }>
                     Read More
                   </ReadMore>
                 </CardActions>

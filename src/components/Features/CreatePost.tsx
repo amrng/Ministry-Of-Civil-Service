@@ -8,12 +8,13 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
 import { TransitionProps } from "@mui/material/transitions";
-import { Box, alpha } from "@mui/material";
+import { Box, Fab, alpha } from "@mui/material";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createPost } from "../../App/api/NewsCrud";
 import { AppButton, VisuallyHiddenInput } from "../../Shared/Styles/AppStyles";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import CloseIcon from "@mui/icons-material/Close";
+import AddIcon from "@mui/icons-material/Add";
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -21,10 +22,10 @@ const Transition = React.forwardRef(function Transition(
   },
   ref: React.Ref<unknown>
 ) {
-  return <Slide direction="down" ref={ref} {...props} />;
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function CreateNews() {
+export default function CreatePost() {
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState<any[]>([]);
   const queryClient = useQueryClient();
@@ -87,8 +88,14 @@ export default function CreateNews() {
 
   return (
     <>
-      <Button
+      <Fab
+        variant="extended"
+        size="large"
+        onClick={handleClickOpen}
         sx={{
+          position: "fixed",
+          bottom: 50,
+          right: 50,
           borderRadius: "16px",
           color: "#013756",
           border: "1px solid #013756",
@@ -98,11 +105,10 @@ export default function CreateNews() {
             backgroundColor: alpha("#CEA672", 0.15),
             border: "1px solid #013756",
           },
-        }}
-        variant="outlined"
-        onClick={handleClickOpen}>
-        Create News +
-      </Button>
+        }}>
+        <AddIcon sx={{ mr: 1 }} />
+        Ceate News
+      </Fab>
       <Dialog
         fullScreen
         open={open}

@@ -55,12 +55,15 @@ export const LogoutButton = styled(Button)(() => ({
   fontSize: 16,
 }));
 
-export const Options = styled(Box)(() => ({
+export const Options = styled(Box)(({ theme }) => ({
   display: "flex",
   justifyContent: "space-between",
   alignItems: "center",
   flexWrap: "wrap",
-  gap: 10,
+  gap: 20,
+  [theme.breakpoints.down("md")]: {
+    justifyContent: "center",
+  },
 }));
 
 export const AppButton = styled(Button)(() => ({

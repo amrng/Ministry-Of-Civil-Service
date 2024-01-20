@@ -4,11 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 import { showNews } from "../App/api/NewsCrud";
 import { PostData } from "../Shared/interfaces/interface";
 
-export default function NewsDetails() {
-  const { id } = useParams();
+export default function PostDetails() {
+  const { id, category } = useParams();
   const { data, isLoading, error } = useQuery({
     queryKey: ["News"],
-    queryFn: showNews,
+    queryFn: () => showNews(category!),
   });
 
   if (isLoading) {

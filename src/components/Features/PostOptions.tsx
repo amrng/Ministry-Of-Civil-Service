@@ -1,5 +1,5 @@
 import { Options } from "../../Shared/Styles/AppStyles";
-import CreateNews from "./CreateNews";
+import CreatePost from "./CreatePost";
 import Searcher from "./Search";
 import SortBy from "./SortBy";
 
@@ -7,12 +7,12 @@ interface Iprops {
   isAdmin: boolean;
 }
 
-export default function NewsOptions({ isAdmin }: Iprops) {
+export default function PostOptions({ isAdmin }: Iprops) {
   return (
     <Options>
       <Searcher />
       <SortBy />
-      {isAdmin ? <CreateNews /> : null}
+      {isAdmin ? <CreatePost /> : null}
     </Options>
   );
 }

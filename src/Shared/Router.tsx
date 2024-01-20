@@ -1,9 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "./Layouts/Layout";
-import News from "../pages/News";
+import Post from "../pages/Posts";
 import PublicActivity from "../pages/PublicActivity";
 import About from "../pages/About";
-import NewsDetails from "../pages/NewsDetails";
+import PostDetails from "../pages/PostDetails";
 import AdminLayout from "./Layouts/AdminLayout";
 import Login from "../pages/Login";
 import ProtectedRoutes from "./ProtectedRoutes";
@@ -15,8 +15,8 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      { path: "news", element: <News isAdmin={false} /> },
-      { path: "news/:title/:id", element: <NewsDetails /> },
+      { path: "news", element: <Post isAdmin={false} /> },
+      { path: "news/:categorty/:title/:id", element: <PostDetails /> },
       { path: "activities", element: <PublicActivity /> },
       { path: "about", element: <About /> },
       { path: "**", element: <NotFound /> },
@@ -32,7 +32,7 @@ const router = createBrowserRouter([
       </ProtectedRoutes>
     ),
     children: [
-      { path: "all-news", element: <News isAdmin={true} /> },
+      { path: "all-news", element: <Post isAdmin={true} /> },
       { path: "all-activities", element: <PublicActivity /> },
       { path: "edit-news/:postId", element: <EditPost /> },
       { path: "**", element: <NotFound /> },

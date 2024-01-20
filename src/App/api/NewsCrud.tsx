@@ -1,8 +1,10 @@
 import { getCookie } from "../cookies";
 import axiosInstance from "./axios.config";
 
-export async function showNews() {
-  const { data } = await axiosInstance.get("post/all?lang=en&page=1&limit=10");
+export async function showNews(category: string) {
+  const { data } = await axiosInstance.get(
+    `post/all?lang=en&page=1&limit=10&category=${category}`
+  );
   console.log(data);
 
   return data;

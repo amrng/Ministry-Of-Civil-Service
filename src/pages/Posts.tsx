@@ -6,7 +6,7 @@ interface Iprops {
   isAdmin: boolean;
 }
 
-export default function PublicActivity({ isAdmin }: Iprops) {
+export default function Post({ isAdmin }: Iprops) {
   return (
     <div className="w-full z-0">
       <PostOptions isAdmin={isAdmin} />

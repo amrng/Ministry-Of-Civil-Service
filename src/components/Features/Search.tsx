@@ -11,9 +11,11 @@ const Search = styled("div")(({ theme }) => ({
     border: "1px solid #013756",
     backgroundColor: alpha("#CEA672", 0.15),
   },
-  width: "100%",
   [theme.breakpoints.up("md")]: {
-    width: "auto",
+    width: "300px",
+  },
+  [theme.breakpoints.down("md")]: {
+    flexGrow: 1,
   },
 }));
 
